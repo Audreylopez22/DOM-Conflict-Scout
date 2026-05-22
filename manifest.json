@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@dom-conflict-scout",
+      "strict_min_version": "142.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
+  "name": "DOM Conflict Scout",
+  "version": "1.0.0",
+  "description": "Audita el DOM para detectar inyecciones de otras extensiones.",
+  "icons": {
+    "128": "scout.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "scout.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "detector.global.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

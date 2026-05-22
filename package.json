@@ -1,0 +1,29 @@
+{
+  "name": "browser-auditor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsup src/detector.ts src/popup.ts --watch --format iife --clean --out-dir dist",
+    "build": "tsup src/detector.ts src/popup.ts --format iife --minify --clean --out-dir dist",
+    "postbuild": "cp manifest.json dist/ && cp index.html dist/ && cp scout.png dist/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.1.2",
+      "onFail": "download"
+    }
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^25.7.0",
+    "esbuild": "^0.28.0",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3"
+  }
+}
