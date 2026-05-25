@@ -17,7 +17,7 @@ The library uses a `MutationObserver` to monitor the DOM in real-time for change
 Here is a basic example of how to import and start the auditor:
 
 ```javascript
-import { BrowserAuditor } from '@audreylopez/dom-conflict-scout';
+import { DomConflictScout } from '@audreylopez/dom-conflict-scout';
 
 // Create a callback function to handle detections
 const handleDetection = (detection) => {
