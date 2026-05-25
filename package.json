@@ -1,29 +1,46 @@
 {
-  "name": "browser-auditor",
+  "name": "@audreylopez/dom-conflict-scout",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A browser extension for auditing web pages.",
+  "main": "./dist/detector.js",
+  "module": "./dist/detector.mjs",
+  "types": "./dist/detector.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsup src/detector.ts src/popup.ts --watch --format iife --clean --out-dir dist",
-    "build": "tsup src/detector.ts src/popup.ts --format iife --minify --clean --out-dir dist",
-    "postbuild": "cp manifest.json dist/ && cp index.html dist/ && cp scout.png dist/"
+    "build": "tsup src/detector.ts --format esm,cjs --dts --minify --clean",
+    "dev": "pnpm run build -- --watch",
+    "prepublishOnly": "pnpm run build"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "browser",
+    "extension",
+    "auditor"
+  ],
+  "author": "Your Name",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/audreylopez/dom-conflict-scout.git"
+  },
+  "bugs": {
+    "url": "https://github.com/audreylopez/dom-conflict-scout/issues"
+  },
+  "homepage": "https://github.com/audreylopez/dom-conflict-scout#readme",
+  "devDependencies": {
+    "@types/chrome": "^0.1.42",
+    "@types/node": "^20.12.12",
+    "esbuild": "^0.21.3",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5"
+  },
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.1.2",
+      "version": "9.1.2",
       "onFail": "download"
     }
-  },
-  "type": "module",
-  "devDependencies": {
-    "@types/node": "^25.7.0",
-    "esbuild": "^0.28.0",
-    "tsup": "^8.5.1",
-    "typescript": "^6.0.3"
   }
 }
