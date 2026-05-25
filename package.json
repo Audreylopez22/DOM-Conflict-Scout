@@ -35,12 +35,5 @@
     "esbuild": "^0.21.3",
     "tsup": "^8.0.2",
     "typescript": "^5.4.5"
-  },
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "9.1.2",
-      "onFail": "download"
-    }
   }
 }
