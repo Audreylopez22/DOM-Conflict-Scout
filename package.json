@@ -19,16 +19,19 @@
     "extension",
     "auditor"
   ],
-  "author": "Your Name",
+  "author": "Audrey Lopez",
   "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/audreylopez/dom-conflict-scout.git"
+    "url": "git+https://github.com/Audreylopez22/DOM-Conflict-Scout.git"
   },
   "bugs": {
-    "url": "https://github.com/audreylopez/dom-conflict-scout/issues"
+    "url": "https://github.com/Audreylopez22/DOM-Conflict-Scout/issues"
   },
-  "homepage": "https://github.com/audreylopez/dom-conflict-scout#readme",
+  "homepage": "https://github.com/Audreylopez22/DOM-Conflict-Scout#readme",
   "devDependencies": {
     "@types/chrome": "^0.1.42",
     "@types/node": "^20.12.12",
