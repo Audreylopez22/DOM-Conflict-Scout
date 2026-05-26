@@ -1,0 +1,14 @@
+version: 2
+updates:
+  # Mantener las dependencias de npm (pnpm) actualizadas
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    # Agrupar actualizaciones para evitar ruido (opcional)
+    groups:
+      dependencies:
+        patterns:
+          - "*"
