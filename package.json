@@ -1,6 +1,6 @@
 {
   "name": "@audreylopez/dom-conflict-scout",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A browser extension for auditing web pages.",
   "main": "./dist/detector.js",
   "module": "./dist/detector.mjs",
