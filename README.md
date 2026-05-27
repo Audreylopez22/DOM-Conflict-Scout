@@ -31,8 +31,9 @@ const handleDetection = (detection) => {
 };
 
 // Instantiate the auditor with your callback
-const auditor = new BrowserAuditor({
+const auditor = new DomConflictScout({
   onDetection: handleDetection,
+  debug: true // Opcional: activa los logs de la librería
 });
 
 // Start monitoring the DOM
