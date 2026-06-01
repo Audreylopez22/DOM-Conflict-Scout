@@ -1,23 +1,33 @@
 {
   "name": "@audreylopez/dom-conflict-scout",
-  "version": "1.0.1",
-  "description": "A browser extension for auditing web pages.",
-  "main": "./dist/detector.js",
-  "module": "./dist/detector.mjs",
+  "version": "1.0.2",
+  "description": "A lightweight library to detect DOM injections from browser extensions.",
+  "main": "./dist/detector.cjs",
+  "module": "./dist/detector.js",
   "types": "./dist/detector.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/detector.d.ts",
+      "import": "./dist/detector.js",
+      "require": "./dist/detector.cjs"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/detector.ts --format esm,cjs --dts --minify --clean",
+    "build": "tsup src/detector.ts --format esm,cjs,iife --global-name DOMConflictScout --dts --minify --clean",
     "dev": "pnpm run build -- --watch",
     "prepublishOnly": "pnpm run build"
   },
   "keywords": [
     "browser",
+    "dom",
+    "conflict",
     "extension",
-    "auditor"
+    "auditor",
+    "detector"
   ],
   "author": "Audrey Lopez",
   "license": "ISC",

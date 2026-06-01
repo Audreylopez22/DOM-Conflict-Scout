@@ -3,3 +3,6 @@ packages:
 
 allowBuilds:
   esbuild: false
+
+overrides:
+  '@audreylopez/dom-conflict-scout': 'link:'

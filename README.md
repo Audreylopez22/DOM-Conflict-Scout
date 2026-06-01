@@ -12,35 +12,99 @@ npm install @audreylopez/dom-conflict-scout
 
 ## How to Use
 
-The library uses a `MutationObserver` to monitor the DOM in real-time for changes made by extensions.
+There are two primary ways to use this library, depending on your project's setup.
 
-Here is a basic example of how to import and start the auditor:
+### Method 1: Modern Bundler (Recommended)
 
+This is the standard approach for projects using tools like Vite, Webpack, or Parcel (e.g., React, Vue, Svelte).
+
+**1. Installation:**
+```bash
+npm install @audreylopez/dom-conflict-scout
+```
+
+**2. Usage:**
 ```javascript
 import { DomConflictScout } from '@audreylopez/dom-conflict-scout';
 
-// Create a callback function to handle detections
-const handleDetection = (detection) => {
-  console.log('Extension detected!', detection);
-  
-  // Example: Send data to your analytics service
-  // myAnalytics.track('ExtensionInterference', {
-  //   source: detection.source,
-  //   keyword: detection.matchedKeyword,
-  // });
-};
-
-// Instantiate the auditor with your callback
-const auditor = new DomConflictScout({
-  onDetection: handleDetection,
-  debug: true // Opcional: activa los logs de la librería
+const scout = new DomConflictScout({
+  onDetection: (detection) => {
+    console.log('Extension detected!', detection);
+    // Send data to your analytics service, etc.
+  },
+  debug: true // Optional: enables detailed console logs
 });
 
-// Start monitoring the DOM
-auditor.start();
+scout.start();
+```
 
-// To stop monitoring later
-// auditor.stop();
+### Method 2: Classic `<script>` Tag (CDN)
+
+For simple HTML pages or quick tests, you can load the library directly from a CDN.
+
+**1. Include the script:**
+Add this script tag to the end of your `<body>`. It will create a `window.DOMConflictScout` global variable.
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@audreylopez/dom-conflict-scout@LATEST_VERSION/dist/detector.global.js"></script>
+```
+*Note: Replace `LATEST_VERSION` with the current version number, e.g., `1.0.2`.*
+
+**2. Usage:**
+```javascript
+const scout = new window.DOMConflictScout({
+  onDetection: (detection) => {
+    console.log('Extension detected!', detection.source);
+  }
+});
+
+scout.start();
+```
+
+---
+
+## Advanced Usage
+
+### How to Run a Timed Scan
+
+If you only want to monitor the DOM for a specific duration (e.g., the first 30 seconds after the page loads).
+
+```javascript
+const scout = new DomConflictScout({ onDetection: handleDetection });
+scout.start();
+
+// Stop monitoring after 30 seconds
+setTimeout(() => {
+  scout.stop();
+  console.log('Timed scan finished.');
+}, 30000);
+```
+
+### How to Run Periodic Scans
+
+If you prefer to take a "snapshot" of the DOM at intervals instead of constant monitoring.
+
+**Note:** This pattern involves creating and destroying the observer repeatedly. For most use cases, the real-time monitoring (`start()` and `stop()`) is more efficient.
+
+```javascript
+function runSingleScan() {
+  console.log('🔍 Running periodic scan...');
+  const scout = new DomConflictScout({
+    onDetection: handleDetection,
+  });
+  
+  // start() runs an initial scan immediately.
+  scout.start();
+  
+  // We stop it shortly after to prevent continuous observation.
+  setTimeout(() => scout.stop(), 200);
+}
+
+// Run a scan every 15 seconds
+const intervalId = setInterval(runSingleScan, 15000);
+
+// To stop the periodic scans later:
+// clearInterval(intervalId);
 ```
 
 ## How it Works
