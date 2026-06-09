@@ -48,7 +48,7 @@ Add this script tag to the end of your `<body>`. It will create a `window.DOMCon
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@audreylopez/dom-conflict-scout@LATEST_VERSION/dist/detector.global.js"></script>
 ```
-*Note: Replace `LATEST_VERSION` with the current version number, e.g., `1.0.2`.*
+*Note: Replace `LATEST_VERSION` with the current version number, e.g., `1.0.3`.*
 
 **2. Usage:**
 ```javascript

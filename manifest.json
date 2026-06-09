@@ -10,8 +10,8 @@
     }
   },
   "name": "DOM Conflict Scout",
-  "version": "1.0.0",
-  "description": "Audita el DOM para detectar inyecciones de otras extensiones.",
+  "version": "1.0.3",
+  "description": "Audit the DOM to detect injections from other extensions.",
   "icons": {
     "128": "scout.png"
   },

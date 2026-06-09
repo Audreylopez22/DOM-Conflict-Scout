@@ -31,7 +31,7 @@ const updatePeriodicCountdown = () => {
     const timeLeft = nextScanDate - now;
 
     if (timeLeft <= 0) {
-        if (statsEl) statsEl.innerText = `📡 Escaneando ahora...`;
+        if (statsEl) statsEl.innerText = `📡 Scanning now...`;
         // La cuenta regresiva se detendrá y se reiniciará la próxima vez que se abra el popup
         stopAllCountdowns();
         return;
@@ -41,7 +41,7 @@ const updatePeriodicCountdown = () => {
     const seconds = Math.floor((timeLeft / 1000) % 60);
 
     if (statsEl) {
-        statsEl.innerText = `📡 Próximo escaneo en ${minutes}m ${seconds.toString().padStart(2, '0')}s`;
+        statsEl.innerText = `📡 Next scan in ${minutes}m ${seconds.toString().padStart(2, '0')}s`;
     }
 }
 
@@ -51,7 +51,7 @@ const updateCountdown = () => {
     const timeLeft = sessionEndDate - now;
 
     if (timeLeft <= 0) {
-      if (statsEl) statsEl.innerText = "Sesión finalizada. Puede iniciar una nueva.";
+      if (statsEl) statsEl.innerText = "Session ended. You can start a new one.";
       stopAllCountdowns();
       return;
     }
@@ -60,17 +60,17 @@ const updateCountdown = () => {
     const seconds = Math.floor((timeLeft / 1000) % 60);
 
     if (statsEl) {
-      statsEl.innerText = `🚨 Auditoría activa. Finaliza en ${minutes}m ${seconds.toString().padStart(2, '0')}s`;
+      statsEl.innerText = `🚨 Active audit. Ends in ${minutes}m ${seconds.toString().padStart(2, '0')}s`;
     }
   } else if (document.getElementById('stop-controls')?.style.display.includes('block')) {
-      if (statsEl) statsEl.innerText = `🛰️ Auditoría activa...`;
+      if (statsEl) statsEl.innerText = `🛰️ Active audit...`;
   }
 };
 
 
 const updatePopupUI = (data: any) => {
   if (!countdownInterval && !periodicCountdownInterval && !sessionEndDate && statsEl && !document.getElementById('stop-controls')?.style.display?.includes('block')) { 
-      statsEl.innerText = `🚨 Detectadas ${data.extensionsCount} extensiones (${data.totalInjections} elementos)`;
+      statsEl.innerText = `🚨 Detected ${data.extensionsCount} extensions (${data.totalInjections} elements)`;
   }
   
   if (listEl) {
@@ -96,14 +96,14 @@ const updatePopupUI = (data: any) => {
 
       const impact = document.createElement('small');
       impact.style.color = '#57606f';
-      impact.textContent = `Impacto: ${ext.count} elementos`;
+      impact.textContent = `Impact: ${ext.count} elements`;
       card.appendChild(impact);
 
       card.appendChild(document.createElement('br'));
 
       const signatures = document.createElement('small');
       const sigLabel = document.createElement('strong');
-      sigLabel.textContent = 'Firmas: ';
+      sigLabel.textContent = 'Signatures: ';
       signatures.appendChild(sigLabel);
       signatures.appendChild(document.createTextNode(ext.keywords.join(', ')));
       card.appendChild(signatures);
@@ -129,7 +129,7 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message.action === 'UPDATE_STATS') {
     updatePopupUI(message);
   } else if (message.action === 'AUDIT_STOPPED') {
-    if (statsEl) statsEl.innerText = "Sesión finalizada.";
+    if (statsEl) statsEl.innerText = "Session ended.";
     if(startControls) startControls.style.display = 'block';
     if(stopControls) stopControls.style.display = 'none';
     stopAllCountdowns();
@@ -141,8 +141,8 @@ const requestCurrentState = async () => {
   if (tab?.id) {
     chrome.tabs.sendMessage(tab.id, { action: 'GET_STATE' }, (response) => {
       if (chrome.runtime.lastError) {
-        console.warn("No se pudo comunicar con el content script. Puede que la página no lo soporte.");
-        if (statsEl) statsEl.innerText = "No se puede auditar esta página.";
+        console.warn("The content script could not be accessed. The page may not support it.");
+        if (statsEl) statsEl.innerText = "This page cannot be audited.";
         if (startControls) (startControls as HTMLElement).style.display = 'none';
         return;
       }
@@ -221,7 +221,7 @@ stopBtn?.addEventListener('click', async () => {
       if (response?.status === 'stopped') {
         if(stopControls) stopControls.style.display = 'none';
         if(startControls) startControls.style.display = 'flex';
-        if (statsEl) statsEl.innerText = "Auditoría detenida. Puede iniciar una nueva sesión.";
+        if (statsEl) statsEl.innerText = "Audit stopped. You can start a new session.";
         stopAllCountdowns();
       }
     });
