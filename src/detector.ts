@@ -80,7 +80,7 @@ export class DomConflictScout {
    */
   public start() {
     if (this.options.debug) {
-      console.log('🚀 DomConflictScout: Vigilante activado.');
+      console.log('🚀 DomConflictScout: Vigilant activated');
     }
     this.observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
@@ -105,7 +105,7 @@ export class DomConflictScout {
       this.observer.disconnect();
       this.observer = null;
       if (this.options.debug) {
-        console.log('🛑 DomConflictScout: Vigilante detenido.');
+        console.log('🛑 DomConflictScout: Vigilant stopped.');
       }
     }
   }
@@ -121,7 +121,7 @@ export class DomConflictScout {
     }
 
     if (this.options.debug) {
-      console.warn(`🚨 [DETECTOR] ${detection.source} detectado`, {
+      console.warn(`🚨 [DETECTOR] ${detection.source} detected`, {
         element,
         keyword: detection.matchedKeyword,
       });
