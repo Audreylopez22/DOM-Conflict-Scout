@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>DOM Conflict Scout</title>
@@ -16,35 +16,35 @@
     <h1>🛡️ DOM Conflict Scout</h1>
     <div class="controls">
         <div id="start-controls" style="display: flex; flex-direction: column; gap: 8px;">
-            <label for="duration-select" style="font-size: 0.9rem; font-weight: bold; color: #2f3542;">Duración de la sesión:</label>
+            <label for="duration-select" style="font-size: 0.9rem; font-weight: bold; color: #2f3542;">Session duration:</label>
             <select id="duration-select" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
-              <option value="15">15 minutos</option>
-              <option value="30" selected>30 minutos</option>
-              <option value="60">1 hora</option>
+              <option value="15">15 minutes</option>
+              <option value="30" selected>30 minutes</option>
+              <option value="60">1 hour</option>
             </select>
-            <button id="start-audit-btn">🛡️ Iniciar Sesión</button>
+            <button id="start-audit-btn">🛡️ Start Session</button>
 
             <div style="border-top: 1px dashed #ccc; margin-top: 10px; padding-top: 10px; display: flex; flex-direction: column; gap: 8px;">
-                <label for="interval-select" style="font-size: 0.9rem; font-weight: bold; color: #2f3542;">O ejecutar un escaneo cada:</label>
+                <label for="interval-select" style="font-size: 0.9rem; font-weight: bold; color: #2f3542;">Or run a scan every:</label>
                  <select id="interval-select" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
-                  <option value="5">5 minutos</option>
-                  <option value="10" selected>10 minutos</option>
-                  <option value="30">30 minutos</option>
+                  <option value="5">5 minutes</option>
+                  <option value="10" selected>10 minutes</option>
+                  <option value="30">30 minutes</option>
                 </select>
-                <button id="start-periodic-btn" style="background: hwb(211 0% 0%); color: #f6f9fc;">📡 Iniciar Escaneo Periódico</button>
+                <button id="start-periodic-btn" style="background: hwb(211 0% 0%); color: #f6f9fc;">📡 Start Periodic Scan</button>
             </div>
         </div>
         <div id="stop-controls" style="display: none;">
-            <button id="stop-audit-btn">⚪ Detener</button>
+            <button id="stop-audit-btn">⚪ Stop</button>
         </div>
     </div>
-    
+
     <div id="audit-dashboard" style="margin-top: 1rem; border-top: 1px solid #ccc; padding-top: 1rem;">
-        <p id="audit-stats" style="font-weight: bold; color: #57606f; font-size: 0.9rem;">Esperando activación...</p>
+        <p id="audit-stats" style="font-weight: bold; color: #57606f; font-size: 0.9rem;">Waiting for activation...</p>
         <div id="audit-list" style="display: grid; gap: 10px; max-height: 300px; overflow-y: auto;"></div>
     </div>
 
-    <p style="font-size: 0.7rem; color: #57606f; margin-top: 1rem;">Esta herramienta monitorea inyecciones del DOM.</p>
+    <p style="font-size: 0.7rem; color: #57606f; margin-top: 1rem;">This tool monitors DOM injections.</p>
     <script src="popup.global.js"></script>
 </body>
 </html>

@@ -181,7 +181,7 @@ const registerInjection = (
 
 
   console.warn(
-    `🚨 [DETECTOR] ${source} detectado usando firma "${matchedKeyword}"`,
+    `🚨 [DETECTOR] ${source} detected using signature "${matchedKeyword}"`,
     {
       element,
       matchedKeyword,
@@ -234,7 +234,7 @@ const reportSummary = () => {
   }
 
   console.log(
-    `📊 Auditoría: ${auditState.totalInjections} detecciones en ${auditState.extensions.size} extensiones.`
+    `📊 Audit: ${auditState.totalInjections} detections across ${auditState.extensions.size} extensions.`
   );
 };
 
@@ -246,7 +246,7 @@ let nextScanTime: number | null = null;
 let intervalDurationMs: number | null = null;
 
 const runFullScan = () => {
-  console.log('🔍 [DETECTOR] Iniciando escaneo completo programado...');
+  console.log('🔍 [DETECTOR] Starting scheduled full scan...');
   document.body.querySelectorAll('*').forEach(el => {
     registerInjection(el as HTMLElement);
   });
@@ -269,7 +269,7 @@ const setupVigilante = () => {
   auditState.extensions.clear();
   auditState.totalInjections = 0;
 
-  console.log('🚀 Vigilante Activo. Observando cambios en el DOM...');
+  console.log('🚀 Watcher active. Observing DOM changes...');
 
   // Escaneo inicial del contenido ya existente
   document.body.querySelectorAll('*').forEach(el => auditNode(el));
@@ -304,14 +304,14 @@ const stopVigilante = (notifyPopup = false) => {
   if (observer) {
     observer.disconnect();
     observer = null;
-    console.log("🛑 Observador en tiempo real detenido.");
+    console.log("🛑 Real-time observer stopped.");
   }
   
   // Detener escaneo periódico
   if (pollingInterval) {
     clearInterval(pollingInterval);
     pollingInterval = null;
-    console.log("🛑 Escáner periódico detenido.");
+    console.log("🛑 Periodic scanner stopped.");
   }
 
   // Detener temporizador de sesión
@@ -348,14 +348,14 @@ if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage)
         if (request.durationMinutes > 0) {
           const durationMs = request.durationMinutes * 60 * 1000;
           sessionEndTime = Date.now() + durationMs;
-          console.log(`⏱️ La sesión de auditoría finalizará en ${request.durationMinutes} minutos.`);
+          console.log(`⏱️ The audit session will end in ${request.durationMinutes} minutes.`);
           stopTimerId = setTimeout(() => {
-            console.log("⏰ El tiempo de la sesión ha expirado.");
+            console.log("⏰ The session time has expired.");
             stopVigilante(true);
           }, durationMs);
         } else {
           sessionEndTime = null;
-          console.log(`🛰️ Monitoreo continuo iniciado.`);
+          console.log(`🛰️ Continuous monitoring started.`);
         }
         sendResponse({ status: 'started', endTime: sessionEndTime, mode: 'realtime' });
       
@@ -367,7 +367,7 @@ if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage)
         const intervalMs = request.intervalMinutes * 60 * 1000;
         intervalDurationMs = intervalMs;
         nextScanTime = Date.now() + intervalMs;
-        console.log(`📡 Escáner periódico iniciado. Se ejecutará cada ${request.intervalMinutes} minutos.`);
+        console.log(`📡 Periodic scanner started. It will run every ${request.intervalMinutes} minutes.`);
         pollingInterval = setInterval(runFullScan, intervalMs);
         sendResponse({ status: 'started', interval: request.intervalMinutes, mode: 'periodic', nextScanTime });
       }

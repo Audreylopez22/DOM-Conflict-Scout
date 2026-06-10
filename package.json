@@ -1,6 +1,6 @@
 {
-  "name": "browser-auditor",
-  "version": "1.0.0",
+  "name": "dom-conflict-scout",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
