@@ -1,6 +1,6 @@
 {
   "name": "@audreylopez/dom-conflict-scout",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A lightweight library to detect DOM injections from browser extensions.",
   "main": "./dist/detector.cjs",
   "module": "./dist/detector.js",

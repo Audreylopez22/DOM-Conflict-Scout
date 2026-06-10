@@ -61,6 +61,12 @@ const scout = new window.DOMConflictScout({
 scout.start();
 ```
 
+## Playground
+
+You can try a live demo of the library and see how it works in a real-world scenario on this playground:
+
+[**Interactive Playground**](https://audreylopez22.github.io/playground-dom-conflict-scout/)
+
 ---
 
 ## Advanced Usage
