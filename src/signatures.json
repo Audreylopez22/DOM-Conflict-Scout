@@ -1,0 +1,94 @@
+{
+  "ADBLOCKER": [
+    "ads", "ad-container", "banner-ads", "sponsor", "carbon-ads",
+    "ublock", "adguard", "adblock", "pub_300x250", "adv-container"
+  ],
+
+  "TRANSLATOR": [
+    "goog-gt-", "translate", "skiptranslate", "translator",
+    "deepl", "tw-container", "transover"
+  ],
+
+  "GRAMMAR": [
+    "grammarly", "gr-", "quillbot", "languagetool", "spellcheck"
+  ],
+
+  "COUPONS": [
+    "honey", "coupon", "shoptimate", "joinhoney", "capitalone",
+    "rakuten", "fakespot", "piggy"
+  ],
+
+  "PASSWORD_MANAGERS": [
+    "bitwarden", "1password", "lastpass", "lp-container",
+    "dashlane", "keeper", "passbolt"
+  ],
+
+  "ACCESSIBILITY_DARK": [
+    "darkreader", "reader-mode", "accessibility", "high-contrast",
+    "screen-reader", "dyslexia"
+  ],
+
+  "WEB3_WALLETS": [
+    "metamask", "phantom", "coinbase-wallet", "brave-wallet"
+  ],
+
+  "DEV_TOOLS_OVERLAYS": [
+    "loom-desktop", "fireshot", "colorzilla", "hover-zoom", "enlarger"
+  ],
+
+  "AI_ASSISTANTS": [
+    "maxai", "harpa", "glarity", "wiseone", "monica-extension",
+    "merlin-", "chatgpt-sidebar", "sider-chat", "perplexity-ext"
+  ],
+
+  "PRODUCTIVITY_SIDEBARS": [
+    "onetab", "workona", "session-buddy", "pushbullet", "toby-tab"
+  ],
+
+  "COOKIE_CONSENT": [
+    "idcac", "consent-o-matic", "ninja-cookie", "cookie-autodelete",
+    "istilldontcareaboutcookies"
+  ],
+
+  "PRICE_TRACKERS": [
+    "keepa", "camelcamelcamel", "priceblink", "pricezombie", "thecamelizer"
+  ],
+
+  "VIDEO_ENHANCERS": [
+    "sponsorblock", "vsc-controller", "enhancer-for-youtube", "magicactions",
+    "turn-off-the-lights", "return-youtube-dislike", "iridium"
+  ],
+
+  "READING_HIGHLIGHTERS": [
+    "hypothesis", "weava", "glasp", "web-clipper", "evernote-clip", "webhighlights"
+  ],
+
+  "TTS_READERS": [
+    "speechify", "naturalreader", "read-aloud", "ttsreader"
+  ],
+
+  "SOCIAL_ENHANCERS": [
+    "betterttv", "bttv", "frankerfacez", "7tv", "resconsole", "unhook-"
+  ],
+
+  "ADWARE_HIJACKERS": [
+    "dealfinder", "shopperpro", "mystartsearch", "webdiscover", "searchencrypt"
+  ],
+
+  "STICKY_VIDEO_PIP": [
+    "picture-in-picture-ext", "floating-video", "always-on-top-video"
+  ],
+
+  "FORM_AUTOFILL": [
+    "lazarus-form", "autofill-", "fakefiller"
+  ],
+
+  "EMOJI_GIF": [
+    "giphy-", "emojikeyboard", "gboard-ext"
+  ], 
+  "SCREENSHOT_ANNOTATION": [
+  "awesome-screenshot","fireshot", "gofullpage", "marker-io", "page-marker", "lightshot", "screenshot"
+  ],
+  "SESSION_RECORDERS": [ "hotjar", "fullstory", "clarity", "logrocket", "mouseflow","smartlook"
+]
+}

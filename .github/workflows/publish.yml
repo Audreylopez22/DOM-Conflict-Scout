@@ -1,0 +1,55 @@
+name: Publish to npm
+
+# Se dispara en cada push a main (y permite ejecución manual desde la pestaña Actions).
+# Solo publica si la versión de package.json todavía no existe en npm, así los pushes
+# que no cambian la versión no rompen el workflow.
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check if version is already published
+        id: check
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "ℹ️  $NAME@$VERSION ya está publicado en npm; se omite la publicación."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "🚀 $NAME@$VERSION es una versión nueva; se procede a publicar."
+          fi
+
+      - name: Build
+        if: steps.check.outputs.exists == 'false'
+        run: pnpm run build
+
+      - name: Publish to npm
+        if: steps.check.outputs.exists == 'false'
+        run: pnpm publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_DEPLOY_TOKEN }}
