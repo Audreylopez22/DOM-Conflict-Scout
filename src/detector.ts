@@ -1,3 +1,5 @@
+import EXTENSION_SIGNATURES from './signatures.json' with { type: 'json' };
+
 /**
  * @typedef {object} DetectionResult
  * @property {string} source - La categoría de la extensión detectada (ej. 'ADBLOCKER').
@@ -20,44 +22,6 @@ export interface DomConflictScoutOptions {
   debug?: boolean;
 }
 
-const EXTENSION_SIGNATURES = {
-  ADBLOCKER: [
-    'ads', 'ad-container', 'banner-ads', 'sponsor', 'carbon-ads',
-    'ublock', 'adguard', 'adblock', 'pub_300x250', 'adv-container'
-  ],
-
-  TRANSLATOR: [
-    'goog-gt-', 'translate', 'skiptranslate', 'translator',
-    'deepl', 'tw-container', 'transover'
-  ],
-
-  GRAMMAR: [
-    'grammarly', 'gr-', 'quillbot', 'languagetool', 'spellcheck'
-  ],
-
-  COUPONS: [
-    'honey', 'coupon', 'shoptimate', 'joinhoney', 'capitalone', 
-    'rakuten', 'fakespot', 'piggy'
-  ],
-
-  PASSWORD_MANAGERS: [
-    'bitwarden', '1password', 'lastpass', 'lp-container', 
-    'dashlane', 'keeper', 'passbolt'
-  ],
-
-  ACCESSIBILITY_DARK: [
-    'darkreader', 'reader-mode', 'accessibility', 'high-contrast',
-    'screen-reader', 'dyslexia'
-  ],
-
-  WEB3_WALLETS: [
-    'metamask', 'phantom', 'coinbase-wallet', 'brave-wallet'
-  ],
-
-  DEV_TOOLS_OVERLAYS: [
-    'loom-desktop', 'fireshot', 'colorzilla', 'hover-zoom', 'enlarger'
-  ]
-};
 
 /**
  * DomConflictScout se encarga de monitorear el DOM para detectar
