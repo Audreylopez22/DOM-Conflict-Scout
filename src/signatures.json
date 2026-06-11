@@ -89,8 +89,10 @@
   "SCREENSHOT_ANNOTATION": [
   "awesome-screenshot","fireshot", "gofullpage", "marker-io", "page-marker", "lightshot", "screenshot"
   ],
-  "SESSION_RECORDERS": [ "hotjar", "fullstory", "clarity", "logrocket", "mouseflow","smartlook"
+  "SESSION_RECORDERS": [ 
+  "hotjar", "fullstory", "clarity", "logrocket", "mouseflow","smartlook"
   ],
-  "SHOPPING_ASSISTANTS": [ "karma", "cently", "shopback", "slickdeals", "couponfollow"
+  "SHOPPING_ASSISTANTS": [ 
+  "karma", "cently", "shopback", "slickdeals", "couponfollow"
   ]
 }

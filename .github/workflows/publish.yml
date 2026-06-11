@@ -1,5 +1,10 @@
 name: Publish to npm
 
+# Fuerza a que las actions JS (checkout, setup-node, pnpm/action-setup) corran sobre
+# Node.js 24, en lugar del Node 20 que GitHub deja obsoleto. Elimina el aviso de deprecación.
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 # Se dispara en cada push a main (y permite ejecución manual desde la pestaña Actions).
 # Solo publica si la versión de package.json todavía no existe en npm, así los pushes
 # que no cambian la versión no rompen el workflow.
