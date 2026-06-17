@@ -136,11 +136,16 @@ chrome.runtime.onMessage.addListener((message) => {
   }
 });
 
-const requestCurrentState = async () => {
+const requestCurrentState = async (retries = 3) => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (tab?.id) {
     chrome.tabs.sendMessage(tab.id, { action: 'GET_STATE' }, (response) => {
       if (chrome.runtime.lastError) {
+        if (retries > 0) {
+          console.log(`Reconnecting... (${retries} attempts left)`);
+          setTimeout(() => requestCurrentState(retries - 1), 500);
+          return;
+        }
         console.warn("Could not communicate with the content script. This page may not support it.");
         if (statsEl) statsEl.innerText = "This page cannot be audited.";
         if (startControls) (startControls as HTMLElement).style.display = 'none';

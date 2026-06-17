@@ -47,11 +47,15 @@ const identifySource = (
   element: HTMLElement
 ): DetectionResult => {
 
+  const className = typeof element.className === 'string' 
+    ? element.className 
+    : (element.getAttribute('class') || '');
+
   // ID + clases
   const basicInfo = (
     element.id +
     ' ' +
-    element.className
+    className
   ).toLowerCase();
 
   const attrInfo = Array.from(element.attributes)
@@ -105,6 +109,8 @@ const auditState = {
   totalInjections: 0
 };
 
+// Evita procesar el mismo elemento múltiples veces y ahorra memoria
+const processedElements = new WeakSet<HTMLElement>();
 
 const shouldIgnoreElement = (
   element: HTMLElement
@@ -124,7 +130,11 @@ const shouldIgnoreElement = (
     !!element.closest('#audit-dashboard') ||
 
     element.classList.contains('controls') ||
-    !!element.closest('.controls')
+    !!element.closest('.controls') ||
+    
+    // Ignorar elementos estándar de accesibilidad de WordPress/CMS (Casa Blanca fix)
+    element.classList.contains('screen-reader-text') ||
+    element.classList.contains('skip-link')
   );
 };
 
@@ -132,10 +142,13 @@ const registerInjection = (
   element: HTMLElement
 ) => {
 
-  // Ignorar elementos técnicos
-  if (shouldIgnoreElement(element)) {
+  // Ignorar elementos técnicos o ya procesados
+  if (shouldIgnoreElement(element) || processedElements.has(element)) {
     return;
   }
+
+  // Marcar como procesado para no volver a examinarlo en futuros escaneos
+  processedElements.add(element);
 
   const detection = identifySource(element);
 
@@ -164,11 +177,15 @@ const registerInjection = (
   // Guardar ejemplos
   if (current.examples.size < 5) {
 
+    const className = typeof element.className === 'string' 
+      ? element.className 
+      : (element.getAttribute('class') || '');
+
     const example =
       `${element.tagName.toLowerCase()}` +
       `${element.id ? '#' + element.id : ''}` +
-      `${element.className
-        ? '.' + element.className.split(' ').join('.')
+      `${className
+        ? '.' + className.split(' ').join('.')
         : ''
       }`;
 
@@ -245,11 +262,23 @@ let pollingInterval: NodeJS.Timeout | null = null;
 let nextScanTime: number | null = null;
 let intervalDurationMs: number | null = null;
 
-const runFullScan = () => {
-  console.log('🔍 [DETECTOR] Starting scheduled full scan...');
-  document.body.querySelectorAll('*').forEach(el => {
-    registerInjection(el as HTMLElement);
-  });
+/**
+ * Realiza un escaneo completo de forma asíncrona para no bloquear la UI.
+ * Divide el trabajo en fragmentos para que webs pesadas como El País no se congelen.
+ */
+const runFullScan = async () => {
+  console.log('🔍 [DETECTOR] Starting optimized full scan...');
+  const allElements = Array.from(document.body.querySelectorAll('*'));
+  const chunkSize = 200; // Procesar de 200 en 200
+  
+  for (let i = 0; i < allElements.length; i += chunkSize) {
+    const chunk = allElements.slice(i, i + chunkSize);
+    chunk.forEach(el => registerInjection(el as HTMLElement));
+    
+    // Dejar que el navegador procese otras tareas (como el popup) entre trozos
+    await new Promise(resolve => setTimeout(resolve, 0));
+  }
+
   reportSummary();
   if (intervalDurationMs) {
     nextScanTime = Date.now() + intervalDurationMs;
@@ -262,7 +291,7 @@ const auditNode = (node: Node) => {
   }
 };
 
-const setupVigilante = () => {
+const setupVigilante = async () => {
   console.clear();
 
   // Limpiar estado previo
@@ -271,22 +300,12 @@ const setupVigilante = () => {
 
   console.log('🚀 Watcher active. Observing DOM changes...');
 
-  // Escaneo inicial del contenido ya existente
-  document.body.querySelectorAll('*').forEach(el => auditNode(el));
-  reportSummary();
-
   // Si ya existe un observador, lo desconectamos primero
   if (observer) {
     observer.disconnect();
   }
 
-  // Limpiamos cualquier temporizador previo
-  if (stopTimerId) {
-    clearTimeout(stopTimerId);
-    stopTimerId = null;
-  }
-
-  // Creamos el observador para detectar inyecciones en tiempo real
+  // Creamos el observador PRIMERO para capturar inyecciones inmediatas
   observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach(auditNode);
@@ -297,6 +316,15 @@ const setupVigilante = () => {
     childList: true,
     subtree: true
   });
+
+  // Escaneo inicial asíncrono (de fondo, sin await)
+  runFullScan();
+
+  // Limpiamos cualquier temporizador previo
+  if (stopTimerId) {
+    clearTimeout(stopTimerId);
+    stopTimerId = null;
+  }
 };
 
 const stopVigilante = (notifyPopup = false) => {
@@ -338,49 +366,44 @@ const stopVigilante = (notifyPopup = false) => {
 if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage) {
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
-    // Antes de empezar cualquier modo, nos aseguramos de que todo esté limpio.
     if (request.action === 'START_AUDIT') {
-      stopVigilante(); // Limpieza universal
-      setupVigilante(); // Inicia el estado y hace un escaneo inicial
-
-      // Modo Sesión Temporizada o Continua (Usa MutationObserver)
-      if (request.durationMinutes) {
-        if (request.durationMinutes > 0) {
-          const durationMs = request.durationMinutes * 60 * 1000;
-          sessionEndTime = Date.now() + durationMs;
-          console.log(`⏱️ The audit session will end in ${request.durationMinutes} minutes.`);
-          stopTimerId = setTimeout(() => {
-            console.log("⏰ The session time has expired.");
-            stopVigilante(true);
-          }, durationMs);
+      (async () => {
+        stopVigilante();
+        if (request.intervalMinutes) {
+          const intervalMs = request.intervalMinutes * 60 * 1000;
+          intervalDurationMs = intervalMs;
+          nextScanTime = Date.now() + intervalMs;
+          runFullScan(); 
+          pollingInterval = setInterval(runFullScan, intervalMs);
+          sendResponse({ status: 'started', interval: request.intervalMinutes, mode: 'periodic', nextScanTime });
         } else {
-          sessionEndTime = null;
-          console.log(`🛰️ Continuous monitoring started.`);
+          setupVigilante(); 
+          if (request.durationMinutes && request.durationMinutes > 0) {
+            const durationMs = request.durationMinutes * 60 * 1000;
+            sessionEndTime = Date.now() + durationMs;
+            stopTimerId = setTimeout(() => stopVigilante(true), durationMs);
+          }
+          sendResponse({ status: 'started', endTime: sessionEndTime, mode: 'realtime' });
         }
-        sendResponse({ status: 'started', endTime: sessionEndTime, mode: 'realtime' });
-      
-      // Modo Escáner Periódico (Usa setInterval)
-      } else if (request.intervalMinutes) {
-        if (observer) observer.disconnect(); // Nos aseguramos que el observer no corra en este modo
-        observer = null;
-
-        const intervalMs = request.intervalMinutes * 60 * 1000;
-        intervalDurationMs = intervalMs;
-        nextScanTime = Date.now() + intervalMs;
-        console.log(`📡 Periodic scanner started. It will run every ${request.intervalMinutes} minutes.`);
-        pollingInterval = setInterval(runFullScan, intervalMs);
-        sendResponse({ status: 'started', interval: request.intervalMinutes, mode: 'periodic', nextScanTime });
-      }
-    } else if (request.action === 'STOP_AUDIT') {
+      })();
+      return true; // Respuesta asíncrona
+    } 
+    
+    if (request.action === 'STOP_AUDIT') {
       stopVigilante();
       sendResponse({ status: 'stopped' });
-    } else if (request.action === 'GET_STATE') {
+      return false;
+    } 
+    
+    if (request.action === 'GET_STATE') {
       const active = !!observer || !!pollingInterval;
       const mode = observer ? 'realtime' : (pollingInterval ? 'periodic' : null);
       const interval = intervalDurationMs ? intervalDurationMs / (60 * 1000) : null;
       sendResponse({ active, endTime: sessionEndTime, mode, interval, nextScanTime });
+      return false;
     }
-    return true;
+
+    return false;
   });
 }
 
