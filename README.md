@@ -113,6 +113,82 @@ const intervalId = setInterval(runSingleScan, 15000);
 // clearInterval(intervalId);
 ```
 
+## Custom Signatures
+
+The library ships with a built-in dictionary of fingerprints for 25+ categories of common extensions (ad blockers, translators, grammar checkers, password managers, etc.). You don't need to contact the author to extend it: you can add your own signatures or modify the existing ones directly from your code.
+
+> **The built-in signatures always keep working.** Anything you provide is layered on top — your own keywords are added, never silently dropped.
+
+### Option A: Extend the built-in signatures (`customSignatures`)
+
+Use `customSignatures` to merge your own fingerprints with the built-in ones. New categories are added, and for categories that already exist your keywords are appended to the defaults (duplicates are ignored, case-insensitive).
+
+```javascript
+import { DomConflictScout } from '@audreylopez/dom-conflict-scout';
+
+const scout = new DomConflictScout({
+  customSignatures: {
+    // Adds a keyword to an EXISTING built-in category:
+    ADBLOCKER: ['my-corporate-adblock'],
+    // Creates a BRAND-NEW category:
+    INTERNAL_TOOLS: ['acme-widget', 'acme-helper'],
+  },
+  onDetection: (d) => console.log(`${d.source} detected:`, d.matchedKeyword),
+});
+
+scout.start(); // Same start() as always — it now detects built-in + your signatures.
+```
+
+There is **no extra "run" step**: the merge happens once when the instance is created, so the regular `start()` already scans the combined table.
+
+### Option B: Replace all signatures (`signatures`)
+
+If you want full control and prefer to start from scratch (ignoring the built-in dictionary entirely), pass `signatures` instead. This option takes precedence over `customSignatures`.
+
+```javascript
+const scout = new DomConflictScout({
+  signatures: {
+    ONLY_THIS: ['foo', 'bar'],
+  },
+});
+scout.start(); // Detects ONLY the signatures you provided.
+```
+
+### Option C: Modify signatures at runtime
+
+You can also change the signatures of a live instance, without recreating it:
+
+```javascript
+const scout = new DomConflictScout();
+scout.start();
+
+// Add keywords (creates the category if it doesn't exist):
+scout.addSignature('TRANSLATOR', ['my-translator']);
+
+// Remove specific keywords from a category:
+scout.removeSignature('ADBLOCKER', ['sponsor']);
+
+// Remove an entire category:
+scout.removeSignature('WEB3_WALLETS');
+
+// Inspect the currently active signatures:
+console.log(scout.getSignatures());
+```
+
+### TypeScript
+
+The signature type is exported so you get autocompletion and type-checking:
+
+```typescript
+import { DomConflictScout, type ExtensionSignatures } from '@audreylopez/dom-conflict-scout';
+
+const mySignatures: ExtensionSignatures = {
+  INTERNAL_TOOLS: ['acme-widget'],
+};
+
+const scout = new DomConflictScout({ customSignatures: mySignatures });
+```
+
 ## How it Works
 
 The library scans the `id`, `class`, attributes, and outer HTML of elements added to the DOM, matching them against a dictionary of known "fingerprints" left by common browser extensions (ad blockers, translators, grammar checkers, etc.).
